@@ -28,14 +28,21 @@ class DataReaderImpl implements DataReader {
    * This method is where the candidate should add the implementation. Logs have been added to track
    * the data fetching behavior. Do not modify any other areas of the code.
    */
-  private @Nonnull Stream<String> fetchPaginatedDataAsStream() {
-    log.info("Fetching paginated data as stream.");
+  // empty list allData to store fetched data
+    List<String> allData = new ArrayList<>();
+    int page = 1; // Sets initial page to 1
+    int pageSize = 100; // Sets page size to 100
+    List<String> paginatedData; // empty list for Collect pagedata
 
-    // Placeholder for paginated data fetching logic
-    // The candidate will add the actual implementation here
+    // Fetching data page by page to till the go paginatedDate is not empty
+    do {
+      paginatedData = paginationService.getPaginatedData(page, pageSize);
+      allData.addAll(paginatedData);
+      log.info("Fetched page {} with {} items", page, paginatedData.size());
+      page++;
+    } while (!paginatedData.isEmpty());
 
-    Stream<String> dataStream =
-        Stream.empty(); // Temporary, will be replaced by the actual data stream
-    return dataStream.peek(item -> log.info("Fetched Item: {}", item));
+    // return Converts allData list to stream & logs each item using peek()
+    return allData.stream().peek(item -> log.info("Fetched Item: {}", item));
   }
 }
